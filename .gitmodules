@@ -3,9 +3,9 @@
 	url = https://github.com/pybind/pybind11.git
 [submodule "dune"]
 	path = dune
-	url = https://gitlab.com/omst/dune.git
+	url = git@gitlab.com:omst/dune.git
 	branch = "feature/calibration3d"
 [submodule "imc"]
 	path = imc
-	url = https://github.com/oceanscan/imc.git
+	url = git@github.com:oceanscan/imc.git
 	branch = "feature/calibration3d"
