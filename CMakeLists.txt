@@ -58,10 +58,10 @@ add_dependencies(dune-core imc)
 #######################################################
 
 # Find all source files starting with pb
-FILE(GLOB_RECURSE CPP_SRC src pb*.cpp)
+FILE(GLOB_RECURSE CPP_SRC src/imcpy_bindings pb*.cpp)
 
 # Use THIN_LTO if available (Clang/LLVM)
-pybind11_add_module(${PROJ_NAME} MODULE THIN_LTO src/imcpy.cpp ${CPP_SRC})
+pybind11_add_module(${PROJ_NAME} MODULE THIN_LTO src/imcpy_bindings/imcpy.cpp ${CPP_SRC})
 
 # Link with dune-core
 if(MSVC)

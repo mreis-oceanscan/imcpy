@@ -69,7 +69,7 @@ class IMCPybind(IMC):
         'fp64_t': 'VectorFp64',
     }
 
-    def __init__(self, imc_path, whitelist=None, out_dir='src/generated'):
+    def __init__(self, imc_path, whitelist=None, out_dir='src/imcpy_bindings/generated'):
         super().__init__(imc_path)
         self.odir = out_dir
         self.whitelist = whitelist

@@ -99,7 +99,7 @@ class CMakeBuild(build_ext):
 
         # Check for previous md5 and compare
         already_generated = False
-        md5_path = os.path.join('src', 'generated', 'imc.md5')
+        md5_path = os.path.join('src', 'imcpy_bindings', 'generated', 'imc.md5')
         if os.path.exists(md5_path):
             with open(md5_path, 'rt') as f:
                 imc_md5_current = f.read()
@@ -108,7 +108,7 @@ class CMakeBuild(build_ext):
                 already_generated = True
             else:
                 # Remove old bindings on MD5 mismatch
-                shutil.rmtree(os.path.join('src', 'generated'))
+                shutil.rmtree(os.path.join('src', 'imcpy_bindings', 'generated'))
 
         # Generate bindings if necessary
         if not already_generated:

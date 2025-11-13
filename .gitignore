@@ -142,6 +142,56 @@ CTestTestfile.cmake
 .vscode
 
 # Generated source files
-src/generated
+src/imcpy_bindings/generated
+
+## ROS2
+# ROS2 build artifacts
+build/
+install/
+log/
+
+# ROS2 workspace files
+.colcon_install_layout
+.colcon_build_layout
+
+# ROS2 package build directories
+**/build/
+**/install/
+**/log/
+
+# ROS2 launch files temporary
+launch.log
+
+# ROS2 rosbag files
+*.bag
+*.db3
+*.db3-*
+
+# ROS2 parameter files
+*.yaml.bak
+*.yml.bak
+
+# ROS2 generated message/service files
+**/msg/__pycache__/
+**/srv/__pycache__/
+**/action/__pycache__/
+
+# ROS2 DDS discovery files
+.ros_discovery/
+
+# ROS2 cyclone DDS files
+cyclonedx.xml
+
+# ROS2 shared memory files
+/dev/shm/
+
+# ROS2 fastrtps files
+*.xml.example
+
+# ROS2 workspace setup files
+setup.bash
+setup.zsh
+setup.sh
+local_setup.*
 
 

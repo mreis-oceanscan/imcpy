@@ -10,7 +10,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pydune"
 version = "1.1.2"
-description = "Python bindings for DUNE-IMC and fast prototyping of navigation and control algorithms"
+description = "Python bindings for DUNE-IMC functionality for fast python prototyping."
 readme = "README.md"
 authors = [
     {name = "Oystein Sture", email = "oysstu@gmail.com"},
@@ -28,7 +28,10 @@ requires-python = ">=3.6"
 dependencies = [
     "ifaddr",
     "numpy",
-    "matplotlib"
+    "matplotlib",
+    "PyYAML",
+    "setuptools",
+    "typing_extensions"
 ]
 
 [project.optional-dependencies]

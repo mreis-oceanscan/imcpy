@@ -1,0 +1,17 @@
+# ROS2 parameter configuration file for multi-vehicle vehicle_updater node
+
+vehicle_updater:
+  ros__parameters:
+    # Node update frequency in Hz
+    frequency: 20.0
+    
+    # List of port numbers for localhost connections
+    # Each port will correspond to a different vehicle (lauv1, lauv2, etc.)
+    ports:
+      - 6004  # lauv1
+      - 6005  # lauv2
+      - 6006  # lauv3
+    
+    # Vehicle namespace prefix
+    # Combined with incremental numbers to create vehicle names
+    namespace_prefix: "lauv"
