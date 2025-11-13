@@ -66,9 +66,6 @@ class VehicleWrapper(DynamicActor):
             'rpm': 0.0
         }
 
-        # Initialize attributes that will be set by the parent node
-        self.origin = {'x': 0.0, 'y': 0.0, 'z': 0.0}
-
     @Subscribe(imcpy.Announce)
     def onAnnounce(self, msg : imcpy.Announce):
         '''
@@ -182,24 +179,26 @@ class VehicleUpdater(Node):
         self.set_vehicle(vehicle_name)
         self.set_origin(origin)
 
-        # Create the IMC wrapper with custom ros_loop callback and custom frequency
+        self.set_wrapper()
+        self.start_time = time.time()
+
+    def set_wrapper(self):
+        '''
+        Create the IMC wrapper with custom ros_loop callback and custom frequency
+        '''
         self.wrapper = VehicleWrapper(self.vehicle_name, 
                                       callback=self.ros_loop,
-                                      frequency=freq)
-        
-        self.start_time = time.time()
+                                      frequency=self.wrapper_freq)
 
     def set_frequency(self, freq, verbose=False):
         '''
         Update the frequency of the node update timer.
-        '''
-        if hasattr(self, 'timer'):
+        '''            
+        self.wrapper_freq = freq
+        dt = 1.0 / freq
+        if hasattr(self,'timer'):
             self.timer.cancel()
-            
-        self.timer = self.create_timer(1.0 / freq, self.update_robot)
-
-        if hasattr(self, 'wrapper'):
-            self.wrapper.set_frequency(freq)
+        self.timer = self.create_timer(dt, self.update_robot)
 
         if verbose:
             self.get_logger().info(f'Update frequency set to: {freq} Hz')
@@ -240,26 +239,33 @@ class VehicleUpdater(Node):
     def parameter_callback(self, params):
         '''
         Callback for parameter changes.
-        '''        
+        '''
+        param_changed = False
         for param in params:
             
             # Process frequency parameter
             if param.name == 'frequency':
                 self.set_frequency(param.value)
                 self.get_logger().info(f'Frequency parameter changed to {self.update_frequency} Hz')
+                param_changed = True
                 continue
 
             # Process vehicle name parameter
             if param.name == 'vehicle':
                 self.set_vehicle(param.value)
                 self.get_logger().info(f'Vehicle name updated: {self.vehicle_name}')
+                param_changed = True
                 continue
 
             # Process origin parameter
             if param.name == 'origin':
                 self.set_origin(param.value)
                 self.get_logger().info(f'Origin updated: {self.origin}')
+                param_changed = True
                 continue
+
+        if param_changed:
+            self.set_wrapper()
 
         return SetParametersResult(successful=True)
         
@@ -281,9 +287,9 @@ class VehicleUpdater(Node):
         rpm = self.wrapper.vehicle['rpm']
 
         if verbose:
-            x = pose['x']
-            y = pose['y']
-            z = pose['z']
+            x = pose['x'] - self.origin['x']
+            y = pose['y'] - self.origin['y']
+            z = pose['z'] - self.origin['z']
             self.get_logger().info(f'{name}: x = {x:.2f}, y = {y:.2f}, z = {z:.2f}')
 
             roll = pose['roll'] * (180.0 / math.pi)
@@ -332,6 +338,7 @@ class VehicleUpdater(Node):
 
     def ros_loop(self):
         rclpy.spin_once(self, timeout_sec=0)
+        # rclpy.spin(self)
 
     def run(self):
         self.wrapper.run()

@@ -40,10 +40,11 @@ def generate_launch_description():
             default_value='10.0',
             description='Update frequency in Hz')
     
-    # use_sim_time  = DeclareLaunchArgument(
-    #         'use_sim_time',
-    #         default_value='false',
-    #         description='Use simulation time')
+    use_sim_time_arg = DeclareLaunchArgument(
+        'use_sim_time',
+        default_value='true',
+        description='Use simulation time'
+    )
 
     update_vehicle = Node(
             package='lauv',
@@ -53,6 +54,7 @@ def generate_launch_description():
             parameters=[{
                 'vehicle': vehicle_conf,
                 'frequency': LaunchConfiguration('frequency'),
+                'use_sim_time': LaunchConfiguration('use_sim_time'),
                 'origin': [0.0, 0.0, 0.0]
             }]
             )
@@ -63,12 +65,9 @@ def generate_launch_description():
             name='robot_state_publisher',
             namespace=vehicle_conf,
             parameters=[{
-                'robot_description': Command([
-                    'xacro ', urdf_file,
-                    ' namespace:=', vehicle_conf
-                ]),
-                'use_sim_time': False,
-                'publish_frequency': LaunchConfiguration('frequency')
+                'robot_description': Command(['xacro ', urdf_file,' namespace:=', vehicle_conf]),
+                'use_sim_time': LaunchConfiguration('use_sim_time'),
+                'publish_frequency': LaunchConfiguration('frequency')           
             }],
             output='screen'
             )
@@ -77,13 +76,18 @@ def generate_launch_description():
             package='rviz2',
             executable='rviz2',
             name='rviz2',
-            output='screen',
-            arguments=['-d', rviz_file])
+            arguments=['-d', rviz_file],
+            parameters=[{
+                'use_sim_time': LaunchConfiguration('use_sim_time')
+                }],
+            output='screen'
+        )
 
     return LaunchDescription([
         rviz_config,
         vehicle_name,
         frequency,
+        use_sim_time_arg,
         update_vehicle,
         robot_state_publisher,
         rviz

@@ -22,12 +22,6 @@ def generate_launch_description():
         description='Node update frequency in Hz'
     )
     
-    use_sim_time_arg = DeclareLaunchArgument(
-        'use_sim_time',
-        default_value='true',
-        description='Use simulation time'
-    )
-    
     origin_arg = DeclareLaunchArgument(
         'origin',
         default_value='[ 0.0, 0.0, 0.0 ]',
@@ -57,11 +51,8 @@ def generate_launch_description():
         name='robot_state_publisher',
         namespace=vehicle_namespace,
         parameters=[{
-            'robot_description': Command([
-                'xacro ', urdf_file,
-                ' namespace:=', vehicle_namespace
-            ]),
-            'use_sim_time': LaunchConfiguration('use_sim_time'),
+            'robot_description': Command(['xacro ', urdf_file,' namespace:=', vehicle_namespace]),
+            'use_sim_time': True,
             'publish_frequency': LaunchConfiguration('frequency')
         }],
         output='screen'
@@ -75,8 +66,7 @@ def generate_launch_description():
         parameters=[{
             'vehicle': LaunchConfiguration('vehicle'),
             'frequency': LaunchConfiguration('frequency'),
-            'use_sim_time': LaunchConfiguration('use_sim_time'),
-            'origin': LaunchConfiguration('origin')
+            'origin': [0.0,0.0,0.0]
         }],
         output='screen'
     )
@@ -87,16 +77,13 @@ def generate_launch_description():
         executable='rviz2',
         name='rviz2',
         arguments=['-d', rviz_config_file],
-        parameters=[{
-            'use_sim_time': LaunchConfiguration('use_sim_time')
-        }],
+        parameters=[{}],
         output='screen'
     )
 
     return LaunchDescription([
         vehicle_name_arg,
         frequency_arg,
-        use_sim_time_arg,
         origin_arg,
         rviz_config_arg,
         robot_state_publisher,
